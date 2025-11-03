@@ -15,8 +15,9 @@
     "express": "^5.1.0"
   },
   "devDependencies": {
+    "@eslint/eslintrc": "2",
     "chai": "^6.2.0",
-    "eslint": "^8.57.0",
+    "eslint": "8",
     "mocha": "^11.7.4",
     "nyc": "^15.1.0",
     "supertest": "^7.1.4"
