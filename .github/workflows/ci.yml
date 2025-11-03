@@ -33,12 +33,39 @@ jobs:
         run: yarn test
 
       - name: Generate coverage
+        if: github.event_name == 'push'
         run: yarn coverage
 
       - name: Upload coverage artifact (only once)
-        if: matrix.node-version == '25.x'
+        if: github.event_name == 'push' && matrix.node-version == '25.x'
         uses: actions/upload-artifact@v4
         with:
           name: coverage-report
-          path: coverage
+          path: coverage/
           overwrite: true
+
+  pr-checks:
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [24.x, 25.x]
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'yarn'
+
+      - name: Install dependencies
+        run: yarn install --frozen-lockfile
+
+      - name: Lint code
+        run: yarn lint
+
+      - name: Run tests
+        run: yarn test
